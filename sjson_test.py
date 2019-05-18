@@ -80,9 +80,13 @@ class TestInit(unittest.TestCase):
     class JObjectKey(sjson.SJCallback):
         def __init__(self):
             self.last_key = None
+            self.last_string = None
 
         def obj_key(self, key):
             self.last_key = key
+
+        def obj_value_string(self, s):
+            self.last_string = s
 
             
     def test_object_key(self):
@@ -93,13 +97,23 @@ class TestInit(unittest.TestCase):
 
         self.assertEqual(obj.last_key,"key")
 
-    def test_object_key2(self):
+    def test_object_key_with_value_sting(self):
         obj = TestInit.JObjectKey()
 
-        data = uio.StringIO('{"key":"True"}')
+        data = uio.StringIO('{"key":"value"}')
         sjson.loads(data, obj)
 
-        self.assertEqual(obj.last_key,"key")
+        self.assertEqual(obj.last_key, "key")
+        self.assertEqual(obj.last_string, "value")
+
+    def test_object_with_two_string_keys(self):
+        obj = TestInit.JObjectKey()
+
+        data = uio.StringIO('{"key1":"value1", "key2": "value2"}')
+        sjson.loads(data, obj)
+
+        self.assertEqual(obj.last_key, "key2")
+        self.assertEqual(obj.last_string, "value2")
 
 if __name__ == '__main__':
     unittest.main()

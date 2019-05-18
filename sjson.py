@@ -15,6 +15,9 @@ class SJCallback:
     def obj_key(self, s: str):
         pass
 
+    def obj_value_string(self, v: str):
+        pass
+
 def loads(stream: Stream , cb: SJCallback):
     c = stream.read(1)
     if len(c) > 0:
@@ -29,8 +32,11 @@ def loads(stream: Stream , cb: SJCallback):
             break
 
         if c == '"':
-            if in_str and side == False:
-                cb.obj_key(s)
+            if in_str:
+                if side == False:
+                    cb.obj_key(s)
+                else:
+                    cb.obj_value_string(s)
                 s = ""
             in_str = not in_str
         elif in_str:
@@ -42,6 +48,8 @@ def loads(stream: Stream , cb: SJCallback):
             cb.end_object()
         elif c == ":":
             side = True
+        elif c == ",":
+            side = False
         
 
         c = stream.read(1)
