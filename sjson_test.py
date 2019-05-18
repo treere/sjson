@@ -63,7 +63,7 @@ class TestInit(unittest.TestCase):
         obj = TestInit.JObject()
 
         data = uio.StringIO("ciao")
-        sjson.loads(data,obj)
+        sjson.loads(data, obj)
 
         self.assertFalse(obj.is_start_called)
         self.assertFalse(obj.is_end_called)
@@ -72,10 +72,34 @@ class TestInit(unittest.TestCase):
         obj = TestInit.JObject()
 
         data = uio.StringIO('{"ciao"}')
-        sjson.loads(data,obj)
+        sjson.loads(data, obj)
 
         self.assertTrue(obj.is_start_called)
         self.assertTrue(obj.is_end_called)
+
+    class JObjectKey(sjson.SJCallback):
+        def __init__(self):
+            self.last_key = None
+
+        def obj_key(self, key):
+            self.last_key = key
+
+            
+    def test_object_key(self):
+        obj = TestInit.JObjectKey()
+
+        data = uio.StringIO('{"key":True}')
+        sjson.loads(data, obj)
+
+        self.assertEqual(obj.last_key,"key")
+
+    def test_object_key2(self):
+        obj = TestInit.JObjectKey()
+
+        data = uio.StringIO('{"key":"True"}')
+        sjson.loads(data, obj)
+
+        self.assertEqual(obj.last_key,"key")
 
 if __name__ == '__main__':
     unittest.main()

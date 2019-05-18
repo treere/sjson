@@ -217,7 +217,7 @@ def run_class(c, test_result):
             except:
                 print(" FAIL on EXCEPTION")
                 test_result.failuresNum += 1
-                #raise
+                raise
                 continue
             finally:
                 tear_down()
