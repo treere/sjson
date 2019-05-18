@@ -27,24 +27,29 @@ def loads(stream: Stream , cb: SJCallback):
     if len(c) > 0:
         cb.start()
 
-    in_str = False
     side = False # False=left, True=right
-    s = ""
     
     while True:
         if len(c) == 0:
             break
 
-        if c == '"':                 # End of begin of a string
-            if in_str:
-                if side == False:
-                    cb.obj_key(s)
+        if c == '"':  # Begin of a string
+            s = ""
+            while True:
+                # TODO: \" is not managed
+                c = stream.read(1)
+                if c == '"':
+                    break
+                elif len(c) == 0:
+                    # TODO: error
+                    pass
                 else:
-                    cb.obj_value_string(s)
-                s = ""
-            in_str = not in_str
-        elif in_str:
-            s = s + c
+                    s = s + c
+                    
+            if side == False:
+                cb.obj_key(s)
+            else:
+                cb.obj_value_string(s)
         elif c == "{":               # Begin of dictionaries
             cb.start_object()
             side = False

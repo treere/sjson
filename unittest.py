@@ -206,7 +206,7 @@ def run_class(c, test_result):
             try:
                 test_result.testsRun += 1
                 m()
-                print(" ok")
+                print(" OK")
             except SkipTest as e:
                 print(" skipped:", e.args[0])
                 test_result.skippedNum += 1

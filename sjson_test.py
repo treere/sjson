@@ -2,7 +2,7 @@ import unittest
 import uio
 import sjson
 
-class TestInit(unittest.TestCase):
+class TestSJson(unittest.TestCase):
     class Start(sjson.SJCallback):
         def __init__(self):
             self.is_called = False
@@ -16,7 +16,7 @@ class TestInit(unittest.TestCase):
             self.is_called = True
 
     def test_start_callback_is_not_called(self):    
-        start = TestInit.Start()
+        start = TestSJson.Start()
         data = uio.StringIO("")
 
         sjson.loads(data,start)
@@ -24,7 +24,7 @@ class TestInit(unittest.TestCase):
         self.assertFalse(start.is_called)
 
     def test_start_callback_is_called(self):
-        start = TestInit.Start()
+        start = TestSJson.Start()
 
         data = uio.StringIO("ciao")        
         sjson.loads(data,start)
@@ -32,7 +32,7 @@ class TestInit(unittest.TestCase):
         self.assertTrue(start.is_called)
 
     def test_end_callback_is_called_on_empty(self):
-        end = TestInit.End()
+        end = TestSJson.End()
             
         data = uio.StringIO("")
         sjson.loads(data,end)
@@ -40,7 +40,7 @@ class TestInit(unittest.TestCase):
         self.assertTrue(end.is_called)
 
     def test_end_callback_is_called(self):
-        end = TestInit.End()
+        end = TestSJson.End()
             
         data = uio.StringIO("ciao")
         sjson.loads(data,end)
@@ -60,7 +60,7 @@ class TestInit(unittest.TestCase):
             self.is_end_called = True
 
     def test_object_no_obj(self):
-        obj = TestInit.JObject()
+        obj = TestSJson.JObject()
 
         data = uio.StringIO("ciao")
         sjson.loads(data, obj)
@@ -69,7 +69,7 @@ class TestInit(unittest.TestCase):
         self.assertFalse(obj.is_end_called)
 
     def test_object(self):
-        obj = TestInit.JObject()
+        obj = TestSJson.JObject()
 
         data = uio.StringIO('{"ciao"}')
         sjson.loads(data, obj)
@@ -90,7 +90,7 @@ class TestInit(unittest.TestCase):
 
             
     def test_object_key(self):
-        obj = TestInit.JObjectKey()
+        obj = TestSJson.JObjectKey()
 
         data = uio.StringIO('{"key":True}')
         sjson.loads(data, obj)
@@ -98,7 +98,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(obj.last_key,"key")
 
     def test_object_key_with_value_sting(self):
-        obj = TestInit.JObjectKey()
+        obj = TestSJson.JObjectKey()
 
         data = uio.StringIO('{"key":"value"}')
         sjson.loads(data, obj)
@@ -107,7 +107,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(obj.last_string, "value")
 
     def test_object_with_two_string_keys(self):
-        obj = TestInit.JObjectKey()
+        obj = TestSJson.JObjectKey()
 
         data = uio.StringIO('{"key1":"value1", "key2": "value2"}')
         sjson.loads(data, obj)
@@ -122,7 +122,7 @@ class TestInit(unittest.TestCase):
             self.last_bool = b
             
     def test_object_with_a_boolean_True(self):
-        obj = TestInit.JBoolObject()
+        obj = TestSJson.JBoolObject()
 
         data = uio.StringIO('{"key":true}')
         sjson.loads(data, obj)
@@ -130,7 +130,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(obj.last_bool, True)
         
     def test_object_with_a_boolean_False(self):
-        obj = TestInit.JBoolObject()
+        obj = TestSJson.JBoolObject()
 
         data = uio.StringIO('{"key":false}')
         sjson.loads(data, obj)
