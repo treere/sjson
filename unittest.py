@@ -200,7 +200,7 @@ def run_class(c, test_result):
     tear_down = getattr(o, "tearDown", lambda: None)
     for name in dir(o):
         if name.startswith("test"):
-            print("%s (%s) ..." % (name, c.__qualname__), end="")
+            print("%s::%s ..." % (c.__qualname__, name), end="")
             m = getattr(o, name)
             set_up()
             try:
