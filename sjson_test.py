@@ -194,6 +194,25 @@ class TestSJson(unittest.TestCase):
         sjson.loads(data, nul)
         self.assertTrue(nul.is_called)
 
+    class JListObject(sjson.SJCallback):
+        def __init__(self):
+            self.is_started = False
+            self.is_ended = False
+
+        def start_list(self):
+            self.is_started = True
+            
+        def end_list(self):
+            self.is_ended = True
+            
+    def test_list_parsing(self):
+        lis = TestSJson.JListObject()
+
+        data = uio.StringIO('[{"key":null}, 1]')
+        sjson.loads(data, lis)
+        self.assertTrue(lis.is_started)
+        self.assertTrue(lis.is_ended)
+
 
 if __name__ == '__main__':
     unittest.main()

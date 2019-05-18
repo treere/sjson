@@ -12,6 +12,12 @@ class SJCallback:
     def end_object(self):
         pass
 
+    def start_list(self):
+        pass
+
+    def end_list(self):
+        pass
+
     def obj_key(self, s: str):
         pass
 
@@ -85,12 +91,17 @@ def loads(stream: Stream , cb: SJCallback):
 
             div = 1 if div == 0 else div
             cb.obj_value_number(sign * d / div)
-            
-        elif c == "{":               # Begin of dictionaries
+
+        # Not an elif because c could be changed
+        if c == "{":               # Begin of dictionaries
             cb.start_object()
             side = False
-        elif c == "}":
+        elif c == "}":               # End of dictionaries
             cb.end_object()
+        elif c == "[":               # Begin of list
+            cb.start_list()
+        elif c == "]":               # End of list
+            cb.end_list()
         elif c == ":":                # Separator of dictionaries
             side = True
         elif c == ",":
