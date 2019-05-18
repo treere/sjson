@@ -248,6 +248,33 @@ class TestSkip(unittest.TestCase):
         sjson.loads(data, val)
         self.assertEqual(val.val_called, 0)
 
+class TestReal(unittest.TestCase):
+    class Tester(sjson.SJCallback):
+        def __init__(self):
+            self.rains = []
+            self.inlist = False
+            
+        def obj_value_number(self, rain):
+            self.rains.append(rain)
+
+        def obj_key(self, s):
+            if self.inlist:
+                if s != "rain":
+                    return True
+            return False
+
+        def start_list(self):
+            self.inlist = True
+    
+    def test_real(self):
+        val = TestReal.Tester()
+
+        data = uio.StringIO('{"list":[{"sun":1,"rain":0},{"sun":1,"rain":1},{"sun":1,"rain":2}],"other":1}')
+        sjson.loads(data, val)
+        
+        print(val.rains)
+
+        
 
 if __name__ == '__main__':
     unittest.main()
