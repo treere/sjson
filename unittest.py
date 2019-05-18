@@ -210,10 +210,13 @@ def run_class(c, test_result):
             except SkipTest as e:
                 print(" skipped:", e.args[0])
                 test_result.skippedNum += 1
-            except:
+            except AssertionError:
                 print(" FAIL")
                 test_result.failuresNum += 1
                 # Uncomment to investigate failure in detail
+            except:
+                print(" FAIL on EXCEPTION")
+                test_result.failuresNum += 1
                 #raise
                 continue
             finally:
