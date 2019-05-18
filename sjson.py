@@ -1,10 +1,14 @@
 
-def loads(stream: Stream , cb_start: Callback, cb_end: Callback):
+class SJCallback:
+    def start(self):
+        pass
+
+    def end(self):
+        pass
+
+def loads(stream: Stream , cb: SJCallback):
     c = stream.read(1)
-    if len(c) > 0 and cb_start:
-        cb_start()
-
-    if cb_end:
-        cb_end()
+    if len(c) > 0:
+        cb.start()
+    cb.end()
         
-
