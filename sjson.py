@@ -21,6 +21,9 @@ class SJCallback:
     def obj_value_bool(self, b: bool):
         pass
 
+    def obj_value_number(self, n : number):
+        pass
+
 
 def loads(stream: Stream , cb: SJCallback):
     c = stream.read(1)
@@ -50,6 +53,28 @@ def loads(stream: Stream , cb: SJCallback):
                 cb.obj_key(s)
             else:
                 cb.obj_value_string(s)
+                
+        if c.isdigit() or c == "-":   # Parsing number
+            if c == "-":
+                d = 0
+                sign = -1
+            else:
+                d = int(c)
+                sign = 1
+                
+            while True:
+                # TODO: \" is not managed
+                c = stream.read(1)
+                if not c.isdigit():
+                    break
+                elif len(c) == 0:
+                    # TODO: error
+                    pass
+                else:
+                    d = d*10 + int(c)
+                    
+            cb.obj_value_number(sign * d)
+            
         elif c == "{":               # Begin of dictionaries
             cb.start_object()
             side = False
@@ -75,7 +100,6 @@ def loads(stream: Stream , cb: SJCallback):
                 # TODO: error in parsing
                 pass
         
-
         c = stream.read(1)
         
     cb.end()
