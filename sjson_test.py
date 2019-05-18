@@ -115,6 +115,28 @@ class TestInit(unittest.TestCase):
         self.assertEqual(obj.last_key, "key2")
         self.assertEqual(obj.last_string, "value2")
 
+    class JBoolObject(sjson.SJCallback):
+        def __init__(self):
+            self.last_bool = None
+        def obj_value_bool(self, b: bool):
+            self.last_bool = b
+            
+    def test_object_with_a_boolean_True(self):
+        obj = TestInit.JBoolObject()
+
+        data = uio.StringIO('{"key":true}')
+        sjson.loads(data, obj)
+
+        self.assertEqual(obj.last_bool, True)
+        
+    def test_object_with_a_boolean_False(self):
+        obj = TestInit.JBoolObject()
+
+        data = uio.StringIO('{"key":false}')
+        sjson.loads(data, obj)
+
+        self.assertEqual(obj.last_bool, False)
+
 if __name__ == '__main__':
     unittest.main()
 
