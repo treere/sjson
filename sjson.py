@@ -18,8 +18,8 @@ class SJCallback:
     def end_list(self):
         pass
 
-    def obj_key(self, s: str):
-        pass
+    def obj_key(self, s: str) -> bool:
+        return False
 
     def obj_value_string(self, v: str):
         pass
@@ -59,7 +59,28 @@ def loads(stream: Stream , cb: SJCallback):
                     s = s + c
                     
             if side == False:
-                cb.obj_key(s)
+                skip = cb.obj_key(s)
+                if skip:
+                    q = 0
+                    g = 0
+                    while True:
+                        c = stream.read(1)
+                        if c == '[':
+                            q += 1
+                        elif c == ']':
+                            q -= 1
+                        elif c == '{':
+                            g += 1
+                        elif c == '}' and g != 0:
+                            g -= 1
+                        elif c == '}' and g == 0:
+                            break
+                        elif c == ',' and g == 0 and q == 0:
+                            break
+                        elif len(c) == 0:
+                            # TODO: error in parsing
+                            break
+                    
             else:
                 cb.obj_value_string(s)
                 

@@ -214,6 +214,39 @@ class TestSJson(unittest.TestCase):
         self.assertTrue(lis.is_ended)
 
 
+    class JNoValue(sjson.SJCallback):
+        def __init__(self, name):
+            self.val_called = 0
+            self.name = name
+        def obj_key(self, s):
+            return s == self.name
+
+        def obj_value_number(self, n : number):
+            self.val_called = n
+
+
+    def test_skip_key_simple_value(self):
+        val = TestSJson.JNoValue("not")
+
+        data = uio.StringIO('{"not":42}')
+        sjson.loads(data, val)
+        self.assertEqual(val.val_called, 0)
+
+    def test_skip_key_two_values(self):
+        val = TestSJson.JNoValue("not")
+
+        data = uio.StringIO('{"not":42, "yes": 43}')
+        sjson.loads(data, val)
+        self.assertEqual(val.val_called, 43)
+
+    def test_skip_key_sub_object(self):
+        val = TestSJson.JNoValue("not")
+        
+        data = uio.StringIO('{"not":{"second_no":43, "ahah":1}}')
+        sjson.loads(data, val)
+        self.assertEqual(val.val_called, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
 
