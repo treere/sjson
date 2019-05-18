@@ -165,6 +165,36 @@ class TestSJson(unittest.TestCase):
         self.assertEqual(num.last_number, -42)
         self.assertTrue(num.end)
 
+    def test_object_with_a_positive_float(self):
+        num = TestSJson.JNumObject()
+
+        data = uio.StringIO('{"key":42.1}')
+        sjson.loads(data, num)
+        self.assertEqual(num.last_number, 42.1)
+        self.assertTrue(num.end)
+
+    def test_object_with_a_negative_float(self):
+        num = TestSJson.JNumObject()
+
+        data = uio.StringIO('{"key":-42.11}')
+        sjson.loads(data, num)
+        self.assertEqual(num.last_number, -42.11)
+        self.assertTrue(num.end)
+
+    class JNullObject(sjson.SJCallback):
+        def __init__(self):
+            self.is_called = False
+        def obj_value_null(self):
+            self.is_called = True
+            
+    def test_object_with_a_null(self):
+        nul = TestSJson.JNullObject()
+
+        data = uio.StringIO('{"key":null}')
+        sjson.loads(data, nul)
+        self.assertTrue(nul.is_called)
+
+
 if __name__ == '__main__':
     unittest.main()
 
